@@ -1,0 +1,198 @@
+    <!doctype html>
+    <html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de pedidos de material</title>
+    <!-- Enlace a la hoja de estilos externa -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Carga diferida en orden: primero la clase y datos, luego la lógica pura y finalmente la interfaz -->
+    <script src="js/Producto.js" defer></script>
+    <script src="js/logica.js" defer></script>
+    <script src="js/app.js" defer></script>
+    </head>
+    <body>
+    <header>
+        <h1>Gestor de pedidos de material</h1>
+    </header>
+
+    <main>
+        <!-- SECCIÓN 1: CATÁLOGO DE PRODUCTOS -->
+        <section aria-labelledby="titulo-catalogo">
+        <h2 id="titulo-catalogo">Catálogo de productos</h2>
+
+        <div class="filtros">
+            <div>
+            <label for="busqueda-nombre">Buscar por nombre</label>
+            <input id="busqueda-nombre" type="text" placeholder="Ej. Ratón, Monitor...">
+            </div>
+            <div>
+            <label for="filtro-categoria">Categoría</label>
+            <select id="filtro-categoria">
+                <option value="todas">Todas las categorías</option>
+                <option value="perifericos">Periféricos</option>
+                <option value="oficina">Oficina</option>
+                <option value="monitores">Monitores</option>
+            </select>
+            </div>
+        </div>
+
+        <p id="mensaje-catalogo" class="aviso" role="status"></p>
+        <div id="contenedor-catalogo" class="grid-catalogo"></div>
+        </section>
+
+        <!-- SECCIÓN 2: CARRITO ACTIVO -->
+        <section aria-labelledby="titulo-carrito">
+        <h2 id="titulo-carrito">Carrito activo</h2>
+        <p id="mensaje-carrito" class="aviso" role="status"></p>
+
+        <div id="contenedor-carrito"></div>
+
+        <div class="resumen-economico">
+            <p>Total de unidades: <strong id="total-unidades">0</strong></p>
+            <p>Subtotal: <strong id="importe-subtotal">0.00 €</strong></p>
+            <p>Descuento (10% si &ge; 100 €): <strong id="importe-descuento">0.00 €</strong></p>
+            <p class="total-destacado">Total a pagar: <strong id="importe-total">0.00 €</strong></p>
+        </div>
+        </section>
+
+        <!-- SECCIÓN 3: FORMULARIO DE CONFIRMACIÓN DE PEDIDO -->
+        <section aria-labelledby="titulo-formulario">
+        <h2 id="titulo-formulario">Confirmación de pedido</h2>
+
+        <!-- novalidate permite coordinar toda la validación desde JavaScript con Constraint Validation API -->
+        <form id="form-pedido" novalidate>
+            <div class="campo">
+            <label for="cliente-nombre">Nombre y apellidos *</label>
+            <input
+                id="cliente-nombre"
+                name="nombre"
+                type="text"
+                required
+                minlength="2"
+                maxlength="60"
+                aria-describedby="err-nombre"
+            >
+            <small id="err-nombre" class="error" aria-live="polite"></small>
+            </div>
+
+            <div class="campo">
+            <label for="cliente-email">Correo electrónico *</label>
+            <input
+                id="cliente-email"
+                name="email"
+                type="email"
+                required
+                aria-describedby="err-email"
+            >
+            <small id="err-email" class="error" aria-live="polite"></small>
+            </div>
+
+            <!-- Agrupación semántica con fieldset y legend para las modalidades de entrega -->
+            <fieldset>
+            <legend>Modalidad de entrega *</legend>
+            <label class="inline">
+                <input type="radio" name="modalidad" value="recogida" checked>
+                Recogida en tienda
+            </label>
+            <label class="inline">
+                <input type="radio" name="modalidad" value="envio">
+                Envío a domicilio
+            </label>
+            <small id="err-modalidad" class="error" aria-live="polite"></small>
+            </fieldset>
+
+            <!-- Bloque condicional: solo obligatorio y visible cuando se elige envío -->
+            <div id="bloque-envio" class="oculto">
+            <div class="campo">
+                <label for="cliente-direccion">Dirección postal *</label>
+                <input
+                id="cliente-direccion"
+                name="direccion"
+                type="text"
+                minlength="5"
+                maxlength="100"
+                aria-describedby="err-direccion"
+                >
+                <small id="err-direccion" class="error" aria-live="polite"></small>
+            </div>
+
+            <div class="campo">
+                <label for="cliente-cp">Código postal (España: 01xxx - 52xxx) *</label>
+                <input
+                id="cliente-cp"
+                name="cp"
+                type="text"
+                maxlength="5"
+                inputmode="numeric"
+                aria-describedby="err-cp"
+                >
+                <small id="err-cp" class="error" aria-live="polite"></small>
+            </div>
+            </div>
+
+            <div class="campo">
+            <label for="cliente-observaciones">Observaciones (opcional)</label>
+            <textarea
+                id="cliente-observaciones"
+                name="observaciones"
+                rows="3"
+                maxlength="200"
+                aria-describedby="contador-observaciones err-observaciones"
+            ></textarea>
+            <small id="contador-observaciones" class="contador">0 / 200 caracteres</small>
+            <small id="err-observaciones" class="error" aria-live="polite"></small>
+            </div>
+
+            <div class="campo">
+            <label class="inline">
+                <input
+                id="cliente-acepto"
+                name="acepto"
+                type="checkbox"
+                value="si"
+                required
+                aria-describedby="err-acepto"
+                >
+                Confirmo que los datos del pedido son correctos *
+            </label>
+            <small id="err-acepto" class="error" aria-live="polite"></small>
+            </div>
+
+            <button type="submit">Confirmar pedido</button>
+        </form>
+
+        <p id="estado-pedido" class="aviso" role="status"></p>
+        </section>
+
+        <!-- SECCIÓN 4: HISTORIAL DE PEDIDOS Y EXPORTACIÓN JSON -->
+        <section aria-labelledby="titulo-historial">
+        <h2 id="titulo-historial">Historial de pedidos</h2>
+
+        <div class="filtros">
+            <div>
+            <label for="filtro-historial">Filtrar por modalidad</label>
+            <select id="filtro-historial">
+                <option value="todos">Todos</option>
+                <option value="recogida">Recogida</option>
+                <option value="envio">Envío</option>
+            </select>
+            </div>
+            <div class="resumen-historial">
+            <span>Pedidos mostrados: <strong id="historial-cantidad">0</strong></span>
+            <span>Importe acumulado: <strong id="historial-suma">0.00 €</strong></span>
+            </div>
+        </div>
+
+        <p id="mensaje-historial" class="aviso" role="status"></p>
+        <div id="contenedor-historial"></div>
+
+        <div class="exportacion">
+            <button id="btn-exportar" type="button">Exportar historial</button>
+            <label for="salida-json" class="oculto">JSON exportado</label>
+            <textarea id="salida-json" rows="6" readonly placeholder="Pulsa 'Exportar historial' para generar el JSON..."></textarea>
+        </div>
+        </section>
+    </main>
+    </body>
+    </html>
