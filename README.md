@@ -1,5 +1,5 @@
 # Gestor de pedidos de material
-
+#Link IA: https://gemini.google.com/app/0399403e2990826a?dest=create
 Aplicación web desarrollada en **HTML, CSS y JavaScript puro** (sin frameworks, backend, bases de datos ni almacenamiento persistente en `localStorage` o cookies) para consultar un catálogo de material informático y de oficina, gestionar un carrito activo en memoria, validar un formulario de pedido y registrar el historial de compras con exportación en formato JSON.
 
 ---
