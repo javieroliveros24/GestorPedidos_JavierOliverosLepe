@@ -132,21 +132,23 @@ Este archivo no contiene ningún `document.querySelector` ni modifica la interfa
 
 ## 5. Evidencias de depuración y red (DevTools)
 
-*(Sustituir las rutas de imagen tras realizar las capturas en tu navegador)*:
+<img width="1470" height="880" alt="Captura de pantalla 2026-11-20 a las 17 14 07" src="https://github.com/user-attachments/assets/bbd6dbb2-c62c-40b8-b77d-e4bf62222e88" />
+
 
 ### Evidencia en la pestaña Network (carga por HTTP)
 * **Comprobación**: Al abrir `http://127.0.0.1:5500/index.html` con DevTools abierto en **Network**, se verifica que todos los recursos (`index.html`, `styles.css`, `Producto.js`, `logica.js`, `app.js`) se sirven mediante protocolo HTTP con código `200 OK`.
-* *(Insertar aquí captura de la pestaña Network)*
 
+<img width="1470" height="802" alt="Captura de pantalla 2026-11-20 a las 17 19 47" src="https://github.com/user-attachments/assets/9b0f28a9-9c5d-48b3-a17e-e7036845cb63" />
+
+  
 ### Evidencia de depuración con punto de interrupción (Sources)
 * **Comprobación**: Se coloca un *breakpoint* en `js/app.js` dentro del manejador `submit`, justo en la línea `producto.descontarStock(linea.cantidad)`. Al confirmar un pedido válido, la ejecución se detiene y el panel **Scope** permite inspeccionar el contenido del array `carrito`, el valor numérico de `subtotal` y la reducción en tiempo real de `producto.stock` antes y después de ejecutar el paso.
-* *(Insertar aquí captura de la pestaña Sources con el punto de interrupción detenido)*
+
+<img width="1470" height="806" alt="Captura de pantalla 2026-11-20 a las 17 22 27" src="https://github.com/user-attachments/assets/da6967e2-d7fc-42b5-94e9-ca943c06ee9d" />
+
 
 ---
 
-## 6. Uso de Inteligencia Artificial
-
-* **Enlace / exportación de la conversación**: *(Incluir aquí el enlace público o ruta al archivo exportado del chat utilizado)*.
 * **Análisis de decisiones tomadas**:
   * **Consultas realizadas**: Se consultó cómo estructurar la separación entre funciones puras sin acceso al DOM y la actualización de la interfaz, cómo combinar `novalidate` con `setCustomValidity()` y `reportValidity()`, y cómo plantear la expresión regular de provincias españolas (`01` a `52`).
   * **Aceptado y adaptado**: Se aceptó la división en tres archivos JS (`Producto.js`, `logica.js`, `app.js`) cargados con `defer` para mantener la compatibilidad con scripts clásicos vistos en las sesiones, y la delegación de eventos usando `closest('button[data-accion]')`.
